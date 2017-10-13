@@ -6,8 +6,10 @@ import com.android.volley.DefaultRetryPolicy;
 
 import java.util.List;
 
+import oogbox.api.odoo.client.builder.RequestBuilder;
 import oogbox.api.odoo.client.ConnectorClient;
 import oogbox.api.odoo.client.OdooVersion;
+import oogbox.api.odoo.client.listeners.OdooConnectListener;
 import oogbox.api.odoo.client.listeners.OdooErrorListener;
 
 public class OdooClient extends ConnectorClient<OdooClient> {
@@ -43,6 +45,10 @@ public class OdooClient extends ConnectorClient<OdooClient> {
         return odooUser;
     }
 
+    public Boolean isConnected() {
+        return isConnected;
+    }
+
     /**
      * Builder class to initiate OdooClient Object with required host or session.
      */
@@ -68,8 +74,22 @@ public class OdooClient extends ConnectorClient<OdooClient> {
             return this;
         }
 
+        public Builder setConnectListener(OdooConnectListener listener) {
+            client.odooConnectListener = listener;
+            return this;
+        }
+
         public OdooClient build() {
+            client.connect();
             return client;
         }
+    }
+
+    //-----------------------------------------------
+    // Request Builder API
+    //-----------------------------------------------
+
+    public RequestBuilder newRequest(String forModel) {
+        return RequestBuilder.init(this, forModel);
     }
 }

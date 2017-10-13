@@ -52,6 +52,7 @@ public abstract class ConnectorClient<T> implements Response.Listener<JSONObject
 
     // Listeners
     protected OdooErrorListener errorListener;
+    protected OdooConnectListener odooConnectListener;
 
     private Integer newRequestTimeout = OdooClient.REQUEST_TIMEOUT_MS;
     private Integer newRequestMaxRetry = OdooClient.DEFAULT_MAX_RETRIES;
@@ -65,6 +66,7 @@ public abstract class ConnectorClient<T> implements Response.Listener<JSONObject
     protected OdooVersion odooVersion = new OdooVersion();
     protected OdooUser odooUser = new OdooUser();
     protected List<String> databases = new ArrayList<>();
+    protected Boolean isConnected = false;
 
     /* Request Data */
     private OdooParams requestKWArgs = new OdooParams();
@@ -77,7 +79,7 @@ public abstract class ConnectorClient<T> implements Response.Listener<JSONObject
         requestQueue = Volley.newRequestQueue(context);
     }
 
-    public void connect(final OdooConnectListener listener) {
+    public void connect() {
         Log.v(TAG, "Connecting to " + serverHost);
 
         // First getting odoo version.
@@ -104,18 +106,32 @@ public abstract class ConnectorClient<T> implements Response.Listener<JSONObject
                     public void onResult(OdooResult result) {
                         List<String> dbList = result.getArray("result");
                         databases.addAll(dbList);
-                        if (listener != null) listener.onConnected(version);
+                        isConnected = true;
+                        if (odooConnectListener != null) odooConnectListener.onConnected(version);
                     }
 
                     @Override
                     public boolean onError(OdooErrorException error) {
                         Log.w(TAG, "connect()->getDatabases() : " + error.getMessage());
-                        if (listener != null) listener.onConnected(version);
+                        isConnected = true;
+                        if (odooConnectListener != null) odooConnectListener.onConnected(version);
                         return true;
                     }
                 });
             }
         });
+    }
+
+    /**
+     * Register odoo connection listener, Will be triggered when successfully connected
+     * to Odoo
+     *
+     * @param listener connection listener callback
+     * @return self object with new properties
+     */
+    public T setOnConnectListener(OdooConnectListener listener) {
+        odooConnectListener = listener;
+        return (T) this;
     }
 
     /**

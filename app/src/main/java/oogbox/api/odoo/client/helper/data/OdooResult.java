@@ -1,5 +1,6 @@
 package oogbox.api.odoo.client.helper.data;
 
+import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.ArrayList;
@@ -50,6 +51,15 @@ public class OdooResult extends TreeMap<String, Object> {
             return (ArrayList<T>) get(key);
         }
         return new ArrayList<>();
+    }
+
+    public OdooRecord[] getRecords() {
+        if (isValidValue("records")) {
+            Gson gson = new Gson();
+            String recordsJSON = gson.toJson(get("records"));
+            return gson.fromJson(recordsJSON, OdooRecord[].class);
+        }
+        return new OdooRecord[]{};
     }
 
     protected boolean isValidValue(String key) {

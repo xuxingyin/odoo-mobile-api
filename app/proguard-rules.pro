@@ -28,12 +28,18 @@
     *;
 }
 
+-keep class oogbox.api.odoo.client.helper.data.OdooRecord
+-keep class oogbox.api.odoo.client.builder.data.OdooRecords
 # To keep names as it is.
 -keepnames class oogbox.api.odoo.OdooClient
 -keepnames class oogbox.api.odoo.OdooClient$Builder
 -keepnames class oogbox.api.odoo.client.OdooVersion
 -keepnames class oogbox.api.odoo.OdooUser
+-keepnames class oogbox.api.odoo.client.builder.DataResponse
+-keepnames class oogbox.api.odoo.client.builder.RequestBuilder
 -keepnames class oogbox.api.odoo.client.AuthError
+-keepnames class oogbox.api.odoo.client.helper.data.OdooRecord
+-keepnames class oogbox.api.odoo.client.builder.data.OdooRecords
 -keepnames class oogbox.api.odoo.client.helper.data.OdooError
 -keepnames class oogbox.api.odoo.client.helper.data.OdooResult
 -keepnames class oogbox.api.odoo.client.helper.utils.OArguments
@@ -43,6 +49,7 @@
 -keepnames class oogbox.api.odoo.client.helper.utils.OdooValues
 -keepnames class oogbox.api.odoo.client.helper.OdooErrorException
 -keepnames class oogbox.api.odoo.client.listeners.AuthenticateListener
+-keepnames class oogbox.api.odoo.client.listeners.IOdooRecords
 -keepnames class oogbox.api.odoo.client.listeners.IOdooResponse
 -keepnames class oogbox.api.odoo.client.listeners.OdooConnectListener
 -keepnames class oogbox.api.odoo.client.listeners.OdooErrorListener
@@ -64,6 +71,17 @@
     public <methods>;
     public <fields>;
 }
+
+-keepclassmembernames class oogbox.api.odoo.client.builder.* {
+    public <methods>;
+    public <fields>;
+}
+
+-keepclassmembernames class oogbox.api.odoo.client.builder.data.* {
+    public <methods>;
+    public <fields>;
+}
+
 -keepclassmembernames class oogbox.api.odoo.client.listeners.* {
     public <methods>;
     public <fields>;
