@@ -1,0 +1,12 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="oogbox.api.odoo">
+
+    <!-- Internet Permission must required -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <application android:allowBackup="true">
+
+    </application>
+
+</manifest>
