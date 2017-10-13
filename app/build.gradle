@@ -38,8 +38,8 @@ bintray {
     publications = ['OdooAPI']
 
     pkg {
-        repo = 'odoo-mobile-api'
-        name = 'odoo'
+        repo = 'api'
+        name = 'odoo-api'
 
         userOrg = 'odooongobox'
         desc = 'Odoo Android API (JSON RPC) Connector library'
@@ -68,4 +68,25 @@ publishing {
             version '1.0.0-Alpha'
         }
     }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+    // options.encoding = 'UTF-8'
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
 }
