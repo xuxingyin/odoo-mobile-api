@@ -1,6 +1,7 @@
 # Odoo Mobile API (Android)
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[ ![Download](https://api.bintray.com/packages/odooongobox/odoo-mobile-api/odoo/images/download.svg) ](https://bintray.com/odooongobox/odoo-mobile-api/odoo/_latestVersion)
 
 This project is Android Library for communicating with [Odoo](https://www.odoo.com) backend api. Main goal for this library is to provide integration support with Odoo and android native applications. 
 
