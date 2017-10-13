@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.jfrog.bintray'
 apply plugin: 'digital.wup.android-maven-publish'
 
 android {
@@ -9,7 +10,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
-        versionName "1.0.0"
+        versionName "1.0.0-Alpha"
     }
     buildTypes {
         release {
@@ -26,13 +27,45 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
 }
 
+// Bintray Setup
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    publications = ['OdooAPI']
+
+    pkg {
+        repo = 'odoo-mobile-api'
+        name = 'odoo'
+
+        userOrg = 'odooongobox'
+        desc = 'Odoo Android API (JSON RPC) Connector library'
+
+        websiteUrl = 'http://www.oogbox.com'
+        issueTrackerUrl = 'https://github.com/oogbox/odoo-mobile-api/issues'
+        vcsUrl = 'https://github.com/oogbox/odoo-mobile-api.git'
+
+        licenses = ["AGPL-V3"]
+        publish = true
+        publicDownloadNumbers = true
+
+        version {
+            name = "1.0.0-Alpha"
+            desc = "Odoo API Connector Library 1.0.0-Alpha"
+        }
+    }
+}
+
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        OdooAPI(MavenPublication) {
             from components.android
             groupId 'com.oogbox.api'
             artifactId 'odoo'
-            version '1.0.0'
+            version '1.0.0-Alpha'
         }
     }
 }
