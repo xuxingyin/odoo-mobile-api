@@ -54,9 +54,16 @@ public class OdooResult extends TreeMap<String, Object> {
     }
 
     public OdooRecord[] getRecords() {
+        Object data = null;
         if (isValidValue("records")) {
+            data = get("records");
+        }
+        if (isValidValue("result") && get("result") instanceof ArrayList) {
+            data = get("result");
+        }
+        if (data != null) {
             Gson gson = new Gson();
-            String recordsJSON = gson.toJson(get("records"));
+            String recordsJSON = gson.toJson(data);
             return gson.fromJson(recordsJSON, OdooRecord[].class);
         }
         return new OdooRecord[]{};
