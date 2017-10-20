@@ -5,6 +5,7 @@ import oogbox.api.odoo.client.helper.data.OdooError;
 public class OdooErrorException extends Exception {
 
     public enum ErrorType {
+        ConnectionFail,
         UnsupportedVersion,
         InternalServerError,
         AccessDenied,

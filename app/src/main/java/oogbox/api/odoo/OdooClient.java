@@ -79,6 +79,11 @@ public class OdooClient extends ConnectorClient<OdooClient> {
             return this;
         }
 
+        public Builder setSynchronizedRequests(Boolean enable) {
+            client.synchronizedRequests = enable;
+            return this;
+        }
+
         public OdooClient build() {
             client.connect();
             return client;
