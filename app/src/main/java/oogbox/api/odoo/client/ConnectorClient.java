@@ -9,6 +9,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
@@ -24,6 +25,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import oogbox.api.odoo.OdooClient;
 import oogbox.api.odoo.OdooUser;
@@ -49,6 +53,7 @@ public abstract class ConnectorClient<T> implements Response.Listener<JSONObject
     protected Context mContext;
     protected String serverHost;
     protected String sessionId;
+    protected Boolean synchronizedRequests = false;
 
     // Listeners
     protected OdooErrorListener errorListener;
@@ -384,9 +389,6 @@ public abstract class ConnectorClient<T> implements Response.Listener<JSONObject
             call(url, params, callback);
         } catch (JSONException e) {
             e.printStackTrace();
-        } finally {
-            // Cleaning request data
-            cleanRequestData();
         }
     }
 
@@ -423,6 +425,41 @@ public abstract class ConnectorClient<T> implements Response.Listener<JSONObject
             responseCallback.requestingURL = url;
             responseQueue.add(uuid, responseCallback);
         }
+        if (synchronizedRequests) {
+            RequestFuture<JSONObject> requestFuture = RequestFuture.newFuture();
+            // Creating request
+            JsonObjectRequest objectRequest = new JsonObjectRequest(url, requestData, requestFuture, requestFuture) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    return getRequestHeader(uuid, super.getHeaders());
+                }
+            };
+            // Setting retry policies
+            objectRequest.setRetryPolicy(new DefaultRetryPolicy(newRequestTimeout, newRequestMaxRetry,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            // Adding to queue
+            requestQueue.add(objectRequest);
+
+            try {
+                onResponse(requestFuture.get(OdooClient.REQUEST_TIMEOUT_MS, TimeUnit.MILLISECONDS));
+            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                if (errorListener != null) {
+                    OdooErrorException error = new OdooErrorException(e.getMessage(),
+                            OdooErrorException.ErrorType.UnknownError);
+                    if (e instanceof TimeoutException) {
+                        error.errorType = OdooErrorException.ErrorType.TimeOut;
+                    }
+                    if (e instanceof ExecutionException || e instanceof InterruptedException) {
+                        error.errorType = OdooErrorException.ErrorType.ConnectionFail;
+                    }
+                    error.requestingURL = url;
+                    error.requestUUID = uuid;
+                    errorListener.onError(error);
+                }
+            }
+            cleanRequestData();
+            return;
+        }
 
         // Creating request
         JsonObjectRequest objectRequest = new JsonObjectRequest(url, requestData, this, this) {
@@ -431,13 +468,12 @@ public abstract class ConnectorClient<T> implements Response.Listener<JSONObject
                 return getRequestHeader(uuid, super.getHeaders());
             }
         };
-
         // Setting retry policies
         objectRequest.setRetryPolicy(new DefaultRetryPolicy(newRequestTimeout, newRequestMaxRetry,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
         // Adding to queue
         requestQueue.add(objectRequest);
+        cleanRequestData();
     }
 
     /**
