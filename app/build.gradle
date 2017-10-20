@@ -10,7 +10,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
-        versionName "1.0.0-Alpha"
+        versionName "1.0.0"
     }
     buildTypes {
         release {
@@ -22,7 +22,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:26+'
+    compile 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.google.code.gson:gson:2.7'
 }
@@ -53,8 +53,8 @@ bintray {
         publicDownloadNumbers = true
 
         version {
-            name = "1.0.0-Alpha"
-            desc = "Odoo API Connector Library 1.0.0-Alpha"
+            name = "1.0.0"
+            desc = "Odoo API Connector Library 1.0.0"
         }
     }
 }
@@ -65,7 +65,7 @@ publishing {
             from components.android
             groupId 'com.oogbox.api'
             artifactId 'odoo'
-            version '1.0.0-Alpha'
+            version '1.0.0'
         }
     }
 }
@@ -83,7 +83,6 @@ task javadoc(type: Javadoc) {
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
-    // options.encoding = 'UTF-8'
 }
 
 artifacts {
