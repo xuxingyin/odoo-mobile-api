@@ -41,7 +41,7 @@ bintray {
         repo = 'api'
         name = 'odoo-api'
 
-        userOrg = 'odooongobox'
+        userOrg = 'openongobox'
         desc = 'Odoo Android API (JSON RPC) Connector library'
 
         websiteUrl = 'http://www.oogbox.com'
