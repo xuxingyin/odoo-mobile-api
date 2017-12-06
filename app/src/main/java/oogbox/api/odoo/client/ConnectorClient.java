@@ -117,7 +117,6 @@ public abstract class ConnectorClient<T> implements Response.Listener<JSONObject
 
                     @Override
                     public boolean onError(OdooErrorException error) {
-                        Log.w(TAG, "connect()->getDatabases() : " + error.getMessage());
                         isConnected = true;
                         if (odooConnectListener != null) odooConnectListener.onConnected(version);
                         return true;
