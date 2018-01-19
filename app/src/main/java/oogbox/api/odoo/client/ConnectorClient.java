@@ -231,13 +231,12 @@ public abstract class ConnectorClient<T> implements Response.Listener<JSONObject
                 @Override
                 public boolean onError(OdooErrorException error) {
                     switch (error.errorType) {
-                        case ProgrammingError:
-                        case SessionExpired:
-                            if (callback != null)
-                                callback.onLoginFail(AuthError.AuthenticationFailed);
-                            break;
                         case InvalidDatabase:
                             if (callback != null) callback.onLoginFail(AuthError.DatabaseNotFound);
+                            break;
+                        default:
+                            if (callback != null)
+                                callback.onLoginFail(AuthError.AuthenticationFailed);
                             break;
                     }
                     return true;
