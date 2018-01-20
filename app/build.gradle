@@ -9,8 +9,8 @@ android {
         useLibrary 'org.apache.http.legacy'
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0.0-Alpha"
+        versionCode 2
+        versionName "1.0.1"
     }
     buildTypes {
         release {
@@ -53,8 +53,8 @@ bintray {
         publicDownloadNumbers = true
 
         version {
-            name = "1.0.0-Alpha"
-            desc = "Odoo API Connector Library 1.0.0-Alpha"
+            name = "1.0.1"
+            desc = "Odoo API Connector Library 1.0.1"
         }
     }
 }
@@ -65,7 +65,7 @@ publishing {
             from components.android
             groupId 'com.oogbox.api'
             artifactId 'odoo'
-            version '1.0.0-Alpha'
+            version '1.0.1'
         }
     }
 }
