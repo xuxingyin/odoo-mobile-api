@@ -223,9 +223,14 @@ public abstract class ConnectorClient<T> implements Response.Listener<JSONObject
             call(url, params, new IOdooResponse() {
                 @Override
                 public void onResult(OdooResult result) {
-                    OdooUser user = OdooUser.parse(result);
-                    if (callback != null) callback.onLoginSuccess(user);
-                    bindDetailsFromUserObject(user);
+                    if (result.get("uid") instanceof Boolean) {
+                        if (callback != null) callback.onLoginFail(AuthError.AuthenticationFailed);
+                    } else {
+                        OdooUser user = OdooUser.parse(result);
+                        user.odooVersion = odooVersion;
+                        if (callback != null) callback.onLoginSuccess(user);
+                        bindDetailsFromUserObject(user);
+                    }
                 }
 
                 @Override
