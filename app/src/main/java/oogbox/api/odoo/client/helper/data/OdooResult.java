@@ -26,7 +26,7 @@ public class OdooResult extends TreeMap<String, Object> {
         if (isValidValue(key)) {
             return getFloat(key).intValue();
         }
-        return 0;
+        return -1;
     }
 
     public Float getFloat(String key) {
